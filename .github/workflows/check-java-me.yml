@@ -42,7 +42,8 @@ jobs:
           MicroEdition-Profile: MIDP-2.0
 
           EOF
-          jar cfm dist/Slovomaniya.jar build/MANIFEST.MF -C build/preverified .
+          cp build/preverified.jar dist/Slovomaniya.jar
+          jar ufm dist/Slovomaniya.jar build/MANIFEST.MF
           SIZE=$(wc -c < dist/Slovomaniya.jar | tr -d ' ')
           cat > dist/Slovomaniya.jad <<EOF
           MIDlet-Name: Словомания
@@ -54,7 +55,17 @@ jobs:
           MIDlet-Jar-URL: Slovomaniya.jar
           MIDlet-Jar-Size: $SIZE
           EOF
-          jar tf dist/Slovomaniya.jar | grep -q 'Slovomaniya.class'
+          jar tf dist/Slovomaniya.jar | grep -q '^Slovomaniya.class
+          test -s dist/Slovomaniya.jad
+      - name: Опубликовать файлы для Nokia
+        uses: actions/upload-artifact@v4
+        with:
+          name: Slovomaniya-Nokia
+          path: |
+            dist/Slovomaniya.jar
+            dist/Slovomaniya.jad
+          if-no-files-found: error
+
           test -s dist/Slovomaniya.jad
       - name: Опубликовать файлы для Nokia
         uses: actions/upload-artifact@v4

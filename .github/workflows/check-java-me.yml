@@ -15,23 +15,24 @@ jobs:
         with:
           distribution: temurin
           java-version: '8'
-      - name: Скачать библиотеки Java ME и ProGuard
+      - name: Скачать инструменты
         run: |
+          set -eu
           mkdir -p tools build/classes dist
           curl -fLsS --retry 3 -o tools/cldcapi11.jar https://repo.maven.apache.org/maven2/org/microemu/cldcapi11/2.0.4/cldcapi11-2.0.4.jar
           curl -fLsS --retry 3 -o tools/midpapi20.jar https://repo.maven.apache.org/maven2/org/microemu/midpapi20/2.0.4/midpapi20-2.0.4.jar
           curl -fLsS --retry 3 -o tools/proguard.jar https://repo.maven.apache.org/maven2/net/sf/proguard/proguard-base/6.2.2/proguard-base-6.2.2.jar
-      - name: Компиляция с библиотеками Java ME
+      - name: Компилировать Java ME
         run: |
           javac -source 1.7 -target 1.7 -bootclasspath tools/cldcapi11.jar:tools/midpapi20.jar -encoding UTF-8 -d build/classes src/Slovomaniya.java
-      - name: Создать исходный архив классов
-        run: |
           jar cf build/raw.jar -C build/classes .
-      - name: Preverification и совместимая версия байткода
+      - name: Подготовить классы для CLDC
         run: |
           java -cp tools/proguard.jar proguard.ProGuard @proguard.pro
+          test -s build/preverified.jar
       - name: Создать JAR и JAD
         run: |
+          set -eu
           cat > build/MANIFEST.MF <<'EOF'
           Manifest-Version: 1.0
           MIDlet-Name: Словомания
@@ -44,6 +45,7 @@ jobs:
           EOF
           cp build/preverified.jar dist/Slovomaniya.jar
           jar ufm dist/Slovomaniya.jar build/MANIFEST.MF
+          jar tf dist/Slovomaniya.jar | grep -q '^Slovomaniya.class$'
           SIZE=$(wc -c < dist/Slovomaniya.jar | tr -d ' ')
           cat > dist/Slovomaniya.jad <<EOF
           MIDlet-Name: Словомания
@@ -55,17 +57,6 @@ jobs:
           MIDlet-Jar-URL: Slovomaniya.jar
           MIDlet-Jar-Size: $SIZE
           EOF
-          jar tf dist/Slovomaniya.jar | grep -q '^Slovomaniya.class
-          test -s dist/Slovomaniya.jad
-      - name: Опубликовать файлы для Nokia
-        uses: actions/upload-artifact@v4
-        with:
-          name: Slovomaniya-Nokia
-          path: |
-            dist/Slovomaniya.jar
-            dist/Slovomaniya.jad
-          if-no-files-found: error
-
           test -s dist/Slovomaniya.jad
       - name: Опубликовать файлы для Nokia
         uses: actions/upload-artifact@v4

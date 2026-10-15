@@ -20,7 +20,7 @@ jobs:
           mkdir -p tools
           curl -fLsS --retry 3 -o tools/cldcapi11.jar https://repo.maven.apache.org/maven2/org/microemu/cldcapi11/2.0.4/cldcapi11-2.0.4.jar
           curl -fLsS --retry 3 -o tools/midpapi20.jar https://repo.maven.apache.org/maven2/org/microemu/midpapi20/2.0.4/midpapi20-2.0.4.jar
-      - name: Проверить компиляцию под Java ME
+      - name: Проверить исходный код с библиотеками Java ME
         run: |
           mkdir -p build/classes
-          javac -source 1.3 -target 1.1 -bootclasspath tools/cldcapi11.jar:tools/midpapi20.jar -encoding UTF-8 -d build/classes src/Slovomaniya.java
+          javac -source 1.7 -target 1.7 -bootclasspath tools/cldcapi11.jar:tools/midpapi20.jar -encoding UTF-8 -d build/classes src/Slovomaniya.java

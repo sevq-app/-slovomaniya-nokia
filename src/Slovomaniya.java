@@ -55,12 +55,12 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             return;
         }
         puzzle = new Form("Угадай слово");
-        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "\n"));
-        puzzle.append(join("Монеты: ", coins, "\n\n"));
+        puzzle.append(join("Уровень ", Integer.toString(level + 1), " из ", Integer.toString(ANSWERS.length), "\n"));
+        puzzle.append(join("Монеты: ", Integer.toString(coins), "\n\n"));
         puzzle.append(join(QUESTIONS[level], "\n"));
-        puzzle.append(join("Букв: ", ANSWERS[level].length(), "\n"));
+        puzzle.append(join("Букв: ", Integer.toString(ANSWERS[level].length()), "\n"));
         if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "\n"));
-        input = new TextField("Ответ", "", ANSWERS[level].length(), TextField.ANY);
+        input = new TextField("Ответ", "", Integer.toString(ANSWERS[level].length()), TextField.ANY);
         puzzle.append(input);
         puzzle.addCommand(back);
         puzzle.addCommand(check);
@@ -126,28 +126,28 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         }
     }
 
-    private static String join(Object a, Object b) {
+    private static String join(String a, String b) {
         StringBuffer sb = new StringBuffer();
         sb.append(a).append(b);
         return sb.toString();
     }
-    private static String join(Object a, Object b, Object c) {
+    private static String join(String a, String b, String c) {
         StringBuffer sb = new StringBuffer();
         sb.append(a).append(b).append(c);
         return sb.toString();
     }
-    private static String join(Object a, Object b, Object c, Object d, Object e) {
+    private static String join(String a, String b, String c, String d, String e) {
         StringBuffer sb = new StringBuffer();
         sb.append(a).append(b).append(c).append(d).append(e);
         return sb.toString();
     }
-    private static String join(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h, Object i) {
+    private static String join(String a, String b, String c, String d, String e, String f, String g, String h, String i) {
         StringBuffer sb = new StringBuffer();
         sb.append(a).append(b).append(c).append(d).append(e).append(f).append(g).append(h).append(i);
         return sb.toString();
     }
 
-    private static String join(Object a, Object b, Object c, Object d, Object e, Object f) {
+    private static String join(String a, String b, String c, String d, String e, String f) {
         StringBuffer sb = new StringBuffer();
         sb.append(a).append(b).append(c).append(d).append(e).append(f);
         return sb.toString();
@@ -157,7 +157,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         RecordStore store = null;
         try {
             store = RecordStore.openRecordStore(STORE, true);
-            String state = join(level, ";", coins, ";", solved, ";", hintsUsed, ";", revealed);
+            String state = join(level, ";", Integer.toString(coins), ";", Integer.toString(solved), ";", Integer.toString(hintsUsed), ";", revealed);
             byte[] bytes = state.getBytes("UTF-8");
             if (store.getNumRecords() == 0) store.addRecord(bytes, 0, bytes.length);
             else store.setRecord(1, bytes, 0, bytes.length);
@@ -228,7 +228,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             else if (action == FIRE || key == -6) {
                 if (selected == 0) showPuzzle();
                 else if (selected == 3) {
-                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "\nПодсказок: ", hintsUsed, "\nМонеты: ", coins), null, AlertType.INFO);
+                    Alert stats = new Alert("Рекорды", join("Разгадано: ", Integer.toString(solved), "\nПодсказок: ", Integer.toString(hintsUsed), "\nМонеты: ", coins), null, AlertType.INFO);
                     stats.setTimeout(Alert.FOREVER);
                     display.setCurrent(stats, menu);
                 } else {

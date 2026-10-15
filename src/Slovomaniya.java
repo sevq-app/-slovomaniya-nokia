@@ -55,17 +55,11 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             return;
         }
         puzzle = new Form("Угадай слово");
-        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "
-"));
-        puzzle.append(join("Монеты: ", coins, "
-
-"));
-        puzzle.append(join(QUESTIONS[level], "
-"));
-        puzzle.append(join("Букв: ", ANSWERS[level].length(), "
-"));
-        if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "
-"));
+        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "\n"));
+        puzzle.append(join("Монеты: ", coins, "\n\n"));
+        puzzle.append(join(QUESTIONS[level], "\n"));
+        puzzle.append(join("Букв: ", ANSWERS[level].length(), "\n"));
+        if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "\n"));
         input = new TextField("Ответ", "", ANSWERS[level].length(), TextField.ANY);
         puzzle.append(input);
         puzzle.addCommand(back);
@@ -234,9 +228,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             else if (action == FIRE || key == -6) {
                 if (selected == 0) showPuzzle();
                 else if (selected == 3) {
-                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "
-Подсказок: ", hintsUsed, "
-Монеты: ", coins), null, AlertType.INFO);
+                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "\nПодсказок: ", hintsUsed, "\nМонеты: ", coins), null, AlertType.INFO);
                     stats.setTimeout(Alert.FOREVER);
                     display.setCurrent(stats, menu);
                 } else {

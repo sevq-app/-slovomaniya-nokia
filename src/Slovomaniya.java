@@ -146,7 +146,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         sb.append(a).append(b).append(c).append(d).append(e).append(f).append(g).append(h).append(i);
         return sb.toString();
     }
-\n    private void save() {
+\n    private static String join(Object a, Object b, Object c, Object d, Object e, Object f) {\n        StringBuffer sb = new StringBuffer();\n        sb.append(a).append(b).append(c).append(d).append(e).append(f);\n        return sb.toString();\n    }\n\n    private void save() {
         RecordStore store = null;
         try {
             store = RecordStore.openRecordStore(STORE, true);
@@ -221,8 +221,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             else if (action == FIRE || key == -6) {
                 if (selected == 0) showPuzzle();
                 else if (selected == 3) {
-                    Alert stats = new Alert("Рекорды", "Разгадано: " + solved +
-                        "\nПодсказок: " + hintsUsed + "\nМонеты: " + coins, null, AlertType.INFO);
+                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "\nПодсказок: ", hintsUsed, "\nМонеты: ", coins), null, AlertType.INFO);
                     stats.setTimeout(Alert.FOREVER);
                     display.setCurrent(stats, menu);
                 } else {

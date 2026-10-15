@@ -60,7 +60,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         puzzle.append(join(QUESTIONS[level], "\n"));
         puzzle.append(join("Букв: ", Integer.toString(ANSWERS[level].length()), "\n"));
         if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "\n"));
-        input = new TextField("Ответ", "", Integer.toString(ANSWERS[level].length()), TextField.ANY);
+        input = new TextField("Ответ", "", ANSWERS[level].length(), TextField.ANY);
         puzzle.append(input);
         puzzle.addCommand(back);
         puzzle.addCommand(check);

@@ -80,7 +80,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
                 level++;
                 revealed = "";
                 save();
-                Alert success = new Alert("Правильно!", join("Награда: 10 монет. Баланс: ", coins),
+                Alert success = new Alert("Правильно!", join("Награда: 10 монет. Баланс: ", Integer.toString(coins)),
                                           null, AlertType.CONFIRMATION);
                 success.setTimeout(Alert.FOREVER);
                 success.addCommand(next);
@@ -157,7 +157,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         RecordStore store = null;
         try {
             store = RecordStore.openRecordStore(STORE, true);
-            String state = join(level, ";", Integer.toString(coins), ";", Integer.toString(solved), ";", Integer.toString(hintsUsed), ";", revealed);
+            String state = join(Integer.toString(level), ";", Integer.toString(coins), ";", Integer.toString(solved), ";", Integer.toString(hintsUsed), ";", revealed);
             byte[] bytes = state.getBytes("UTF-8");
             if (store.getNumRecords() == 0) store.addRecord(bytes, 0, bytes.length);
             else store.setRecord(1, bytes, 0, bytes.length);
@@ -205,7 +205,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL));
             g.drawString("СЛОВОМАНИЯ", 3, 3, Graphics.TOP | Graphics.LEFT);
             g.setColor(0x30291D);
-            g.drawString(join("Монеты: ", coins), 4, 26, Graphics.TOP | Graphics.LEFT);
+            g.drawString(join("Монеты: ", Integer.toString(coins)), 4, 26, Graphics.TOP | Graphics.LEFT);
             g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
             int y = 46;
             for (int i = 0; i < items.length; i++) {
@@ -228,7 +228,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             else if (action == FIRE || key == -6) {
                 if (selected == 0) showPuzzle();
                 else if (selected == 3) {
-                    Alert stats = new Alert("Рекорды", join("Разгадано: ", Integer.toString(solved), "\nПодсказок: ", Integer.toString(hintsUsed), "\nМонеты: ", coins), null, AlertType.INFO);
+                    Alert stats = new Alert("Рекорды", join("Разгадано: ", Integer.toString(solved), "\nПодсказок: ", Integer.toString(hintsUsed), "\nМонеты: ", Integer.toString(coins)), null, AlertType.INFO);
                     stats.setTimeout(Alert.FOREVER);
                     display.setCurrent(stats, menu);
                 } else {

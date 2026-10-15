@@ -1,5 +1,5 @@
 -injars build/raw.jar
--outjars build/preverified
+-outjars build/preverified.jar
 -libraryjars tools/cldcapi11.jar
 -libraryjars tools/midpapi20.jar
 -dontshrink

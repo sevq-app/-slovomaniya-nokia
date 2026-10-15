@@ -55,11 +55,11 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             return;
         }
         puzzle = new Form("Угадай слово");
-        puzzle.append("Уровень " + (level + 1) + " из " + ANSWERS.length + "\n");
-        puzzle.append("Монеты: " + coins + "\n\n");
-        puzzle.append(QUESTIONS[level] + "\n");
-        puzzle.append("Букв: " + ANSWERS[level].length() + "\n");
-        if (revealed.length() > 0) puzzle.append("Открыто: " + revealed + "\n");
+        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "\n"));
+        puzzle.append(join("Монеты: ", coins, "\n\n"));
+        puzzle.append(join(QUESTIONS[level], "\n"));
+        puzzle.append(join("Букв: ", ANSWERS[level].length(), "\n"));
+        if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "\n"));
         input = new TextField("Ответ", "", ANSWERS[level].length(), TextField.ANY);
         puzzle.append(input);
         puzzle.addCommand(back);
@@ -80,7 +80,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
                 level++;
                 revealed = "";
                 save();
-                Alert success = new Alert("Правильно!", "Награда: 10 монет. Баланс: " + coins,
+                Alert success = new Alert("Правильно!", join("Награда: 10 монет. Баланс: ", coins),
                                           null, AlertType.CONFIRMATION);
                 success.setTimeout(Alert.FOREVER);
                 success.addCommand(next);
@@ -126,11 +126,31 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         }
     }
 
-    private void save() {
+    private static String join(Object a, Object b) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(a).append(b);
+        return sb.toString();
+    }
+    private static String join(Object a, Object b, Object c) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(a).append(b).append(c);
+        return sb.toString();
+    }
+    private static String join(Object a, Object b, Object c, Object d, Object e) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(a).append(b).append(c).append(d).append(e);
+        return sb.toString();
+    }
+    private static String join(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h, Object i) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(a).append(b).append(c).append(d).append(e).append(f).append(g).append(h).append(i);
+        return sb.toString();
+    }
+\n    private void save() {
         RecordStore store = null;
         try {
             store = RecordStore.openRecordStore(STORE, true);
-            String state = level + ";" + coins + ";" + solved + ";" + hintsUsed + ";" + revealed;
+            String state = join(level, ";", coins, ";", solved, ";", hintsUsed, ";", revealed);
             byte[] bytes = state.getBytes("UTF-8");
             if (store.getNumRecords() == 0) store.addRecord(bytes, 0, bytes.length);
             else store.setRecord(1, bytes, 0, bytes.length);
@@ -178,7 +198,7 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL));
             g.drawString("СЛОВОМАНИЯ", 3, 3, Graphics.TOP | Graphics.LEFT);
             g.setColor(0x30291D);
-            g.drawString("Монеты: " + coins, 4, 26, Graphics.TOP | Graphics.LEFT);
+            g.drawString(join("Монеты: ", coins), 4, 26, Graphics.TOP | Graphics.LEFT);
             g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
             int y = 46;
             for (int i = 0; i < items.length; i++) {

@@ -55,11 +55,17 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             return;
         }
         puzzle = new Form("Угадай слово");
-        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "\n"));
-        puzzle.append(join("Монеты: ", coins, "\n\n"));
-        puzzle.append(join(QUESTIONS[level], "\n"));
-        puzzle.append(join("Букв: ", ANSWERS[level].length(), "\n"));
-        if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "\n"));
+        puzzle.append(join("Уровень ", level + 1, " из ", ANSWERS.length, "
+"));
+        puzzle.append(join("Монеты: ", coins, "
+
+"));
+        puzzle.append(join(QUESTIONS[level], "
+"));
+        puzzle.append(join("Букв: ", ANSWERS[level].length(), "
+"));
+        if (revealed.length() > 0) puzzle.append(join("Открыто: ", revealed, "
+"));
         input = new TextField("Ответ", "", ANSWERS[level].length(), TextField.ANY);
         puzzle.append(input);
         puzzle.addCommand(back);
@@ -146,7 +152,14 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
         sb.append(a).append(b).append(c).append(d).append(e).append(f).append(g).append(h).append(i);
         return sb.toString();
     }
-\n    private static String join(Object a, Object b, Object c, Object d, Object e, Object f) {\n        StringBuffer sb = new StringBuffer();\n        sb.append(a).append(b).append(c).append(d).append(e).append(f);\n        return sb.toString();\n    }\n\n    private void save() {
+
+    private static String join(Object a, Object b, Object c, Object d, Object e, Object f) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(a).append(b).append(c).append(d).append(e).append(f);
+        return sb.toString();
+    }
+
+    private void save() {
         RecordStore store = null;
         try {
             store = RecordStore.openRecordStore(STORE, true);
@@ -221,7 +234,9 @@ public final class Slovomaniya extends MIDlet implements CommandListener {
             else if (action == FIRE || key == -6) {
                 if (selected == 0) showPuzzle();
                 else if (selected == 3) {
-                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "\nПодсказок: ", hintsUsed, "\nМонеты: ", coins), null, AlertType.INFO);
+                    Alert stats = new Alert("Рекорды", join("Разгадано: ", solved, "
+Подсказок: ", hintsUsed, "
+Монеты: ", coins), null, AlertType.INFO);
                     stats.setTimeout(Alert.FOREVER);
                     display.setCurrent(stats, menu);
                 } else {

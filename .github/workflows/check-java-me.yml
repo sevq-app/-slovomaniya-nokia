@@ -1,11 +1,11 @@
-name: Проверка Java ME
+name: Сборка Java ME
 
 on:
   push:
   workflow_dispatch:
 
 jobs:
-  compile:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Получить код
@@ -15,12 +15,52 @@ jobs:
         with:
           distribution: temurin
           java-version: '8'
-      - name: Скачать библиотеки Java ME
+      - name: Скачать библиотеки Java ME и ProGuard
         run: |
-          mkdir -p tools
+          mkdir -p tools build/classes dist
           curl -fLsS --retry 3 -o tools/cldcapi11.jar https://repo.maven.apache.org/maven2/org/microemu/cldcapi11/2.0.4/cldcapi11-2.0.4.jar
           curl -fLsS --retry 3 -o tools/midpapi20.jar https://repo.maven.apache.org/maven2/org/microemu/midpapi20/2.0.4/midpapi20-2.0.4.jar
-      - name: Проверить исходный код с библиотеками Java ME
+          curl -fLsS --retry 3 -o tools/proguard.jar https://repo.maven.apache.org/maven2/net/sf/proguard/proguard-base/6.2.2/proguard-base-6.2.2.jar
+      - name: Компиляция с библиотеками Java ME
         run: |
-          mkdir -p build/classes
           javac -source 1.7 -target 1.7 -bootclasspath tools/cldcapi11.jar:tools/midpapi20.jar -encoding UTF-8 -d build/classes src/Slovomaniya.java
+      - name: Создать исходный архив классов
+        run: |
+          jar cf build/raw.jar -C build/classes .
+      - name: Preverification и совместимая версия байткода
+        run: |
+          java -cp tools/proguard.jar proguard.ProGuard @proguard.pro
+      - name: Создать JAR и JAD
+        run: |
+          cat > build/MANIFEST.MF <<'EOF'
+          Manifest-Version: 1.0
+          MIDlet-Name: Словомания
+          MIDlet-Version: 0.1.0
+          MIDlet-Vendor: Slovomaniya
+          MIDlet-1: Словомания,,Slovomaniya
+          MicroEdition-Configuration: CLDC-1.1
+          MicroEdition-Profile: MIDP-2.0
+
+          EOF
+          jar cfm dist/Slovomaniya.jar build/MANIFEST.MF -C build/preverified .
+          SIZE=$(wc -c < dist/Slovomaniya.jar | tr -d ' ')
+          cat > dist/Slovomaniya.jad <<EOF
+          MIDlet-Name: Словомания
+          MIDlet-Version: 0.1.0
+          MIDlet-Vendor: Slovomaniya
+          MIDlet-1: Словомания,,Slovomaniya
+          MicroEdition-Configuration: CLDC-1.1
+          MicroEdition-Profile: MIDP-2.0
+          MIDlet-Jar-URL: Slovomaniya.jar
+          MIDlet-Jar-Size: $SIZE
+          EOF
+          jar tf dist/Slovomaniya.jar | grep -q 'Slovomaniya.class'
+          test -s dist/Slovomaniya.jad
+      - name: Опубликовать файлы для Nokia
+        uses: actions/upload-artifact@v4
+        with:
+          name: Slovomaniya-Nokia
+          path: |
+            dist/Slovomaniya.jar
+            dist/Slovomaniya.jad
+          if-no-files-found: error
